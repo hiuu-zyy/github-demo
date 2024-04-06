@@ -40,3 +40,5 @@ cv2.waitKey(0)
 
 # Đóng tất cả các cửa sổ hiển thị
 cv2.destroyAllWindows() # type: ignore
+
+# Hieu Hieu
