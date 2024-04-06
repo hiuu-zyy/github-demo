@@ -105,5 +105,9 @@ execution_time = end_time - start_time
 print("Execution time:", execution_time, "seconds")
 
 # ngu
+<<<<<<< HEAD
 # dung sua nua
 
+=======
+# create conflict
+>>>>>>> afd68975da8fcdc4b60219269b9a036ee8d5743d
