@@ -36,15 +36,16 @@ def detect_lines_and_circles(image_path,output_path):
             y0 = int((y1+y2)/2)
             # intercept = y1 - gradient * x1
             found_group = False
-            for group in grouped_lines:
-                gline = group[0]
-                gy = gline[-1]
-                if np.abs(gy-y0) < 16 :
-                    group.append((x1, x2, y0)) 
-                    found_group = True
-                    break
-            if not found_group:
-                grouped_lines.append([(x1, x2, y0)])
+            if (y0 > 250 and y0 < 310) or (y0>984 and y0 < 1025):
+                for group in grouped_lines:
+                    gline = group[0]
+                    gy = gline[-1]
+                    if np.abs(gy-y0) < 50 :
+                        group.append((x1, x2, y0)) 
+                        found_group = True
+                        break
+                if not found_group:
+                    grouped_lines.append([(x1, x2, y0)])
 
         longest_lines = []
         for group in grouped_lines:
@@ -53,8 +54,9 @@ def detect_lines_and_circles(image_path,output_path):
                 x1, x2, y0 = line
                 length = np.abs(x1-x2)
                 lengths.append(length)
-            longest_line_index = np.argmax(lengths)
-            longest_lines.append(group[longest_line_index])
+            if lengths:  # Check if lengths is not empty
+                longest_line_index = np.argmax(lengths)
+                longest_lines.append(group[longest_line_index])
 
         # Draw the longest lines on the image
         for line in longest_lines:
@@ -95,8 +97,8 @@ def detect_and_save_image(image_path, output_path):
     return up, down, image_num
 
 
-input_folder_path = r"C:\Users\laVie\Documents\KakaoTalk Downloads\Test\IMAGES2"
-output_folder_path = r"C:\Users\laVie\Documents\KakaoTalk Downloads\Test\CheckedImages2"
+input_folder_path = r"C:\Users\laVie\Documents\KakaoTalk Downloads\Test\IMAGES"
+output_folder_path = r"C:\Users\laVie\Documents\KakaoTalk Downloads\Test\CheckedImages"
 
 check_image_condition_in_folder(input_folder_path, output_folder_path)
 
@@ -105,9 +107,5 @@ execution_time = end_time - start_time
 print("Execution time:", execution_time, "seconds")
 
 # ngu
-<<<<<<< HEAD
 # dung sua nua
 
-=======
-# create conflict
->>>>>>> afd68975da8fcdc4b60219269b9a036ee8d5743d
