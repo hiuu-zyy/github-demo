@@ -40,7 +40,7 @@ def detect_lines_and_circles(image_path,output_path):
             y0 = int((y1+y2)/2)
             # intercept = y1 - gradient * x1
             found_group = False
-            if (y0 > 250 and y0 < 310) or (y0>984 and y0 < 1025):
+            if (y0 > 250 and y0 < 310) or (y0>978 and y0 < 1025):
                 for group in grouped_lines:
                     gline = group[0]
                     gy = gline[-1]
@@ -72,7 +72,7 @@ def detect_lines_and_circles(image_path,output_path):
                 cv2.line(image1, (0, 250), (w, 250), (0, 255, 0), 4)
                 cv2.line(image1, (0, 320), (w, 320), (0, 255, 0), 4)
                 line_number_up += 1
-            elif (y0>984 and y0 < 1025):
+            elif (y0>978 and y0 < 1025):
                 cv2.line(image1, (0, y0), (w, y0), (255, 0, 0), 4)
                 cv2.line(image1, (0, 970), (w, 970), (0, 255, 0), 4)
                 cv2.line(image1, (0, 1050), (w, 1050), (0, 255, 0), 4)
@@ -108,8 +108,8 @@ def detect_and_save_image(image_path, output_path):
     return up, down
 
 
-input_folder_path = r"C:\Users\laVie\Documents\KakaoTalk Downloads\Test\IMAGES2"
-output_folder_path = r"C:\Users\laVie\Documents\KakaoTalk Downloads\Test\CheckedImages2"
+input_folder_path = r"C:\Users\laVie\Documents\KakaoTalk Downloads\Test\IMAGES"
+output_folder_path = r"C:\Users\laVie\Documents\KakaoTalk Downloads\Test\CheckedImages"
 
 check_image_condition_in_folder(input_folder_path, output_folder_path)
 
