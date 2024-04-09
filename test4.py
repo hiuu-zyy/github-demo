@@ -10,9 +10,13 @@ start_time = time.time()
 def detect_lines_and_circles(image_path,output_path):
     # Load the image
     image1 = cv2.imread(image_path)
+
     image = cv2.imread(image_path)
     h,w,_ = image.shape
-
+    cv2.line(image1, (0, 250), (w, 250), (0, 0, 255), 4)
+    cv2.line(image1, (0, 320), (w, 320), (0, 0, 255), 4)
+    cv2.line(image1, (0, 970), (w, 970), (0, 0, 255), 4)
+    cv2.line(image1, (0, 1050), (w, 1050), (0, 0, 255), 4)
     line_number_up = 0
     line_number_down = 0
 
@@ -40,7 +44,7 @@ def detect_lines_and_circles(image_path,output_path):
                 for group in grouped_lines:
                     gline = group[0]
                     gy = gline[-1]
-                    if np.abs(gy-y0) < 50 :
+                    if np.abs(gy-y0) < 70 :
                         group.append((x1, x2, y0)) 
                         found_group = True
                         break
@@ -60,12 +64,18 @@ def detect_lines_and_circles(image_path,output_path):
 
         # Draw the longest lines on the image
         for line in longest_lines:
+            
+
             x1, x2, y0 = line
             if (y0 > 250 and y0 < 310)  : 
-                cv2.line(image1, (0, y0), (w, y0), (0, 255, 0), 4)
+                cv2.line(image1, (0, y0), (w, y0), (255, 0, 0), 4)
+                cv2.line(image1, (0, 250), (w, 250), (0, 255, 0), 4)
+                cv2.line(image1, (0, 320), (w, 320), (0, 255, 0), 4)
                 line_number_up += 1
             elif (y0>984 and y0 < 1025):
-                cv2.line(image1, (0, y0), (w, y0), (0, 255, 0), 4)
+                cv2.line(image1, (0, y0), (w, y0), (255, 0, 0), 4)
+                cv2.line(image1, (0, 970), (w, 970), (0, 255, 0), 4)
+                cv2.line(image1, (0, 1050), (w, 1050), (0, 255, 0), 4)
                 line_number_down += 1
     cv2.imwrite(output_path, image1)
     return line_number_up, line_number_down
@@ -73,6 +83,7 @@ def detect_lines_and_circles(image_path,output_path):
 def check_image_condition_in_folder(input_folder_path, output_folder_path):
     all_good = True
     num_images = 0
+    image_num = 0
     with ThreadPoolExecutor() as executor:
         futures = []
         for filename in os.listdir(input_folder_path):
@@ -83,7 +94,8 @@ def check_image_condition_in_folder(input_folder_path, output_folder_path):
                 futures.append(executor.submit(detect_and_save_image, image_path, output_path))
         
         for future in futures:
-            up, down, image_num = future.result()
+            image_num += 1
+            up, down = future.result()
             if up < 1 or down < 1:
                 print(f"Image {image_num}: NG")
                 all_good = False
@@ -93,12 +105,11 @@ def check_image_condition_in_folder(input_folder_path, output_folder_path):
 
 def detect_and_save_image(image_path, output_path):
     up, down = detect_lines_and_circles(image_path, output_path)
-    image_num = int(output_path.split('.')[0].split('check')[-1])
-    return up, down, image_num
+    return up, down
 
 
-input_folder_path = r"C:\Users\laVie\Documents\KakaoTalk Downloads\Test\IMAGES"
-output_folder_path = r"C:\Users\laVie\Documents\KakaoTalk Downloads\Test\CheckedImages"
+input_folder_path = r"C:\Users\laVie\Documents\KakaoTalk Downloads\Test\IMAGES2"
+output_folder_path = r"C:\Users\laVie\Documents\KakaoTalk Downloads\Test\CheckedImages2"
 
 check_image_condition_in_folder(input_folder_path, output_folder_path)
 
