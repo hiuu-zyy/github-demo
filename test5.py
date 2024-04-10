@@ -7,11 +7,9 @@ import time
 
 start_time = time.time()
 
-def detect_lines_and_circles(image_path,output_path):
-    # Load the image
-    image1 = cv2.imread(image_path)
+def detect_lines_and_circles(image1,output_path):
 
-    image = cv2.imread(image_path)
+    image = image1
     h,w,_ = image.shape
     cv2.line(image1, (0, 240), (w, 240), (0, 0, 255), 4)
     cv2.line(image1, (0, 320), (w, 320), (0, 0, 255), 4)
@@ -30,7 +28,7 @@ def detect_lines_and_circles(image_path,output_path):
 
     # Detect lines using HoughLinesP on the edges
     lines = cv2.HoughLinesP(edges, 1, np.pi / 360, threshold=100, minLineLength=100, maxLineGap=10)
-
+    state = True
     # Filter and keep the longest lines with similar gradients and intercepts
     if lines is not None:
         grouped_lines = []
@@ -78,45 +76,9 @@ def detect_lines_and_circles(image_path,output_path):
                 cv2.line(image1, (0, 1050), (w, 1050), (0, 255, 0), 4)
                 line_number_down += 1
     cv2.imwrite(output_path, image1)
-    return line_number_up, line_number_down
-
-def check_image_condition_in_folder(input_folder_path, output_folder_path):
-    all_good = True
-    num_images = 0
-    image_num = 0
-    with ThreadPoolExecutor() as executor:
-        futures = []
-        for filename in os.listdir(input_folder_path):
-            if filename.endswith(('.jpg', '.jpeg', '.png')):
-                num_images += 1
-                image_path = os.path.join(input_folder_path, filename)
-                output_path = os.path.join(output_folder_path, f'check{num_images}.png')
-                futures.append(executor.submit(detect_and_save_image, image_path, output_path))
-        
-        for future in futures:
-            image_num += 1
-            up, down = future.result()
-            if up < 1 or down < 1:
-                print(f"Image {image_num}: NG")
-                all_good = False
-    
-    if all_good:
-        print("ALL GOOD")
-
-def detect_and_save_image(image_path, output_path):
-    up, down = detect_lines_and_circles(image_path, output_path)
-    return up, down
+    if line_number_down < 1 or line_number_up < 1:
+        state = False
+    return state
 
 
-input_folder_path = r"/Users/hieulx/github-demo/IMAGES2"
-output_folder_path = r"/Users/hieulx/github-demo/CHECKS2"
-
-check_image_condition_in_folder(input_folder_path, output_folder_path)
-
-end_time = time.time()
-execution_time = end_time - start_time
-print("Execution time:", execution_time, "seconds")
-
-# ngu
-# dung sua nua
 
