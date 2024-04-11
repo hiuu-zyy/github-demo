@@ -1,14 +1,13 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 import os
-from concurrent.futures import ThreadPoolExecutor
 import time
 
 start_time = time.time()
 
-def detect_lines_and_circles(image1,output_path):
+def detect_lines(image1,output_folder):
 
+    global processed_images_count
     image = image1
     h,w,_ = image.shape
     cv2.line(image1, (0, 240), (w, 240), (0, 0, 255), 4)
@@ -75,10 +74,26 @@ def detect_lines_and_circles(image1,output_path):
                 cv2.line(image1, (0, 970), (w, 970), (0, 255, 0), 4)
                 cv2.line(image1, (0, 1050), (w, 1050), (0, 255, 0), 4)
                 line_number_down += 1
+
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+    output_path = os.path.join(output_folder, f"output_image_{processed_images_count + 1}.png")
     cv2.imwrite(output_path, image1)
     if line_number_down < 1 or line_number_up < 1:
         state = False
+
+    # increase number of processing image
+    processed_images_count += 1
     return state
+
+processed_images_count = 0
+output_folder = 'Folder_name'
+image = cv2.imread('Path_to_image')
+STATE = detect_lines(image, output_folder)
+print(STATE)
+end_time = time.time()
+execution_time = end_time - start_time
+print("Execution time:", execution_time, "seconds")
 
 
 
